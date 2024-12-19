@@ -11,7 +11,12 @@ This is an iOS app that uses the Yelp Fusion API to fetch and display search res
 
 ## Screenshots
 
-Add screenshots here to showcase the app's UI and functionality.
+<img src="https://github.com/user-attachments/assets/5133173d-40eb-4445-8831-b82caae88885" alt="Main Screen" width="300">
+<img src="https://github.com/user-attachments/assets/62f3ca39-d5bb-481a-a588-21c6198bf1fe" alt="Main Screen" width="300">
+<img src="https://github.com/user-attachments/assets/0d6bedc2-df2e-40e1-b8a4-f8061f280afc" alt="Main Screen" width="300">
+<img src="https://github.com/user-attachments/assets/3a85b35e-1717-4cf7-866e-c5eb8d08cc82" alt="Main Screen" width="300">
+<img src="https://github.com/user-attachments/assets/df9a27a3-80f8-4d6e-9a66-ee7ccda1ea75" alt="Main Screen" width="300">
+
 
 ## Installation
 
