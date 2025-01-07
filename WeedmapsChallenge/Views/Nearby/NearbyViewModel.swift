@@ -62,7 +62,7 @@ final class NearbyViewModel: NSObject, ObservableObject, CLLocationManagerDelega
             case .restricted:
                 errorMessage = "Your location is restricted."
             case .denied:
-                errorMessage = "Your have denied app to access location services."
+                errorMessage = "You have denied access to location services."
             case .authorizedAlways, .authorizedWhenInUse:
                 updateCurrentLocation()
             @unknown default:
