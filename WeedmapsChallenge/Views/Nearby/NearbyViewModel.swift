@@ -20,7 +20,7 @@ final class NearbyViewModel: NSObject, ObservableObject, CLLocationManagerDelega
     
     @Published var businesses = [Business]()
     @Published var suggestions = [String]()
-    @State private var location: LatLong
+    @State private var location: Location
     @Published var city: String?
     
     @Published var errorMessage: String?
@@ -28,7 +28,7 @@ final class NearbyViewModel: NSObject, ObservableObject, CLLocationManagerDelega
     init(searchService: SearchServiceProtocol) {
         self.searchService = searchService
         if let currentLocation = locationManager.location {
-            location = LatLong(clLocation: currentLocation.coordinate)
+            location = Location(clLocation: currentLocation.coordinate)
         } else {
             location = .irvine
         }
@@ -40,7 +40,7 @@ final class NearbyViewModel: NSObject, ObservableObject, CLLocationManagerDelega
     @MainActor
     func getAutocompleteSuggestions(input: String) async {
         do {
-            suggestions = try await searchService.fetchAutocompleteSuggestions(input: input, coords: location)
+            suggestions = try await searchService.fetchAutocompleteSuggestions(input: input, location: location)
         } catch {
             errorMessage = error.localizedDescription
         }
@@ -49,7 +49,7 @@ final class NearbyViewModel: NSObject, ObservableObject, CLLocationManagerDelega
     @MainActor
     func getBusinesses(input: String) async {
         do {
-            businesses = try await searchService.fetchBusinesses(term: input, coords: location)
+            businesses = try await searchService.fetchBusinesses(term: input, location: location)
         } catch {
             errorMessage = error.localizedDescription
         }
@@ -73,7 +73,7 @@ final class NearbyViewModel: NSObject, ObservableObject, CLLocationManagerDelega
     private func updateCurrentLocation(last: CLLocation? = nil) {
         let latest = last ?? locationManager.location
         if let latest {
-            location = LatLong(clLocation: latest.coordinate)
+            location = Location(clLocation: latest.coordinate)
             Task {
                 let city = await getCityName(for: latest)
                 await MainActor.run {
@@ -131,10 +131,11 @@ final class NearbyViewModel: NSObject, ObservableObject, CLLocationManagerDelega
     }
 }
 
-private extension LatLong {
-    static let irvine = LatLong(latitude: 33.669445, longitude: -117.823059)
+private extension Location {
+    static let irvine = Location(city: "Irvine", latitude: 33.669445, longitude: -117.823059)
     
     init(clLocation: CLLocationCoordinate2D) {
+        city = ""
         latitude = clLocation.latitude
         longitude = clLocation.longitude
     }

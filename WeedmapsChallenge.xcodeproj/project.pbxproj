@@ -6,6 +6,11 @@
 	objectVersion = 70;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		72FC364F2D2D80D400AFEE0B /* YelpCache.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 72FC364D2D2D80D400AFEE0B /* YelpCache.xcdatamodeld */; };
+		72FC36572D2D853700AFEE0B /* AutocompleteCache+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72FC36542D2D853700AFEE0B /* AutocompleteCache+CoreDataClass.swift */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		5ABB14902167C42700A2CB2C /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -27,6 +32,8 @@
 		5ABB14792167C42300A2CB2C /* WeedmapsChallenge.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WeedmapsChallenge.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5ABB148F2167C42700A2CB2C /* WeedmapsChallengeTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = WeedmapsChallengeTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		5ABB149A2167C42700A2CB2C /* WeedmapsChallengeUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = WeedmapsChallengeUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		72FC364E2D2D80D400AFEE0B /* YelpCache.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = YelpCache.xcdatamodel; sourceTree = "<group>"; };
+		72FC36542D2D853700AFEE0B /* AutocompleteCache+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AutocompleteCache+CoreDataClass.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -87,6 +94,8 @@
 		5ABB14702167C42300A2CB2C = {
 			isa = PBXGroup;
 			children = (
+				72FC36542D2D853700AFEE0B /* AutocompleteCache+CoreDataClass.swift */,
+				72FC364D2D2D80D400AFEE0B /* YelpCache.xcdatamodeld */,
 				72789B9A2CFFD9A4003DE3A3 /* WeedmapsChallenge */,
 				72789BAF2CFFD9AA003DE3A3 /* WeedmapsChallengeTests */,
 				72789BB42CFFD9B4003DE3A3 /* WeedmapsChallengeUITests */,
@@ -239,6 +248,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				72FC36572D2D853700AFEE0B /* AutocompleteCache+CoreDataClass.swift in Sources */,
+				72FC364F2D2D80D400AFEE0B /* YelpCache.xcdatamodeld in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -598,6 +609,19 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		72FC364D2D2D80D400AFEE0B /* YelpCache.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				72FC364E2D2D80D400AFEE0B /* YelpCache.xcdatamodel */,
+			);
+			currentVersion = 72FC364E2D2D80D400AFEE0B /* YelpCache.xcdatamodel */;
+			path = YelpCache.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = 5ABB14712167C42300A2CB2C /* Project object */;
 }

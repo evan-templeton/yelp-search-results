@@ -9,6 +9,6 @@
 import Foundation
 
 protocol SearchServiceProtocol {
-    func fetchAutocompleteSuggestions(input: String, coords: LatLong) async throws -> [String]
-    func fetchBusinesses(term: String, coords: LatLong) async throws -> [Business]
+    func fetchAutocompleteSuggestions(input: String, location: Location) async throws -> [String]
+    func fetchBusinesses(term: String, location: Location) async throws -> [Business]
 }

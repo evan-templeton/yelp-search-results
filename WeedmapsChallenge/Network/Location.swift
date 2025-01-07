@@ -1,5 +1,5 @@
 //
-//  LatLong.swift
+//  Location.swift
 //  WeedmapsChallenge
 //
 //  Created by Evan Templeton on 12/3/24.
@@ -8,7 +8,8 @@
 
 import Foundation
 
-struct LatLong {
+struct Location {
+    let city: String
     let latitude: Double
     let longitude: Double
 }

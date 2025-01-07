@@ -7,43 +7,72 @@
 //
 
 import Foundation
+import CoreData
 
 final class YelpSearchService: SearchServiceProtocol {
     private static let apiKey = "Bearer SAL4YE9VCbmGRdByCMPrNoOX9sjUBQUMXcQ4UFTYEbqXhBn2f_CwAURsfCufYEfaNqPkMYtqLkWBV75EPkBjHfGY18yntKObuXCSTh9ItiA_YVRaOg7ID8lWc8pxX3Yx"
     
-    private var autocompleteSuggestionsCache = [String: [String]]()
+    private let persistentContainer: NSPersistentContainer
     
-    func fetchAutocompleteSuggestions(input: String, coords: LatLong) async throws -> [String] {
-        let request = try Self.buildAutocompleteRequest(input: input, coords: coords)
-        if let cachedResults = autocompleteSuggestionsCache[input] {
-            return cachedResults
-        } else {
-            let (data, _) = try await URLSession.shared.data(for: request)
-            let autocompleteResponse = try JSONDecoder().decode(YelpAutocompleteResponse.self, from: data)
-            let businessResults = autocompleteResponse.businesses.compactMap { $0.name }
-            let searchTermResults = autocompleteResponse.terms.compactMap { $0["text"] }
-            let results = businessResults + searchTermResults
-            
-            autocompleteSuggestionsCache[input] = results
-            return results
+    init() {
+        persistentContainer = NSPersistentContainer(name: "YelpCache")
+        persistentContainer.loadPersistentStores { _, error in
+            if let error {
+                print("Failed to load Core Data stack: \(error)")
+            }
         }
     }
     
-    // Requires full venue name (will not autocomplete)
-    func fetchBusinesses(term: String, coords: LatLong) async throws -> [Business] {
-        let request = try Self.buildBusinessSearchRequest(term: term, coords: coords)
+    // MARK: - Autocomplete
+    func fetchAutocompleteSuggestions(input: String, location: Location) async throws -> [String] {
+        if let cachedResults = fetchCachedSuggestions(for: input, city: location.city) {
+            return cachedResults
+        }
+        
+        let request = try Self.buildAutocompleteRequest(input: input, location: location)
         let (data, _) = try await URLSession.shared.data(for: request)
-        let response = try JSONDecoder().decode(YelpBusinessSearchResponse.self, from: data)
-        return response.businesses
+        let autocompleteResponse = try JSONDecoder().decode(YelpAutocompleteResponse.self, from: data)
+        let businessResults = autocompleteResponse.businesses.compactMap { $0.name }
+        let searchTermResults = autocompleteResponse.terms.compactMap { $0["text"] }
+        let results = businessResults + searchTermResults
+        
+        saveSuggestionsToCache(input: input, city: location.city, results: results)
+        
+        return results
     }
     
-    private static func buildAutocompleteRequest(input: String, coords: LatLong) throws -> URLRequest {
+    private func fetchCachedSuggestions(for input: String, city: String) -> [String]? {
+        let context = persistentContainer.viewContext
+        let request = AutocompleteCache.fetchRequest()
+        request.predicate = NSPredicate(format: "input == %@ AND city == %@", input, city)
+        
+        if let cachedEntry = try? context.fetch(request).first {
+            return cachedEntry.results
+        }
+        
+        return nil
+    }
+    
+    private func saveSuggestionsToCache(input: String, city: String, results: [String]) {
+        let context = persistentContainer.viewContext
+        let cacheEntry = AutocompleteCache(context: context)
+        cacheEntry.input = input
+        cacheEntry.results = results
+        
+        do {
+            try context.save()
+        } catch {
+            print("Failed to save autocomplete suggestions to cache: \(error)")
+        }
+    }
+    
+    private static func buildAutocompleteRequest(input: String, location: Location) throws -> URLRequest {
         guard var urlComponents = URLComponents(string: "https://api.yelp.com/v3/autocomplete") else {
             throw URLError(.badURL)
         }
         urlComponents.queryItems = [URLQueryItem(name: "text", value: input.lowercased()),
-                                    URLQueryItem(name: "latitude", value: String(coords.latitude)),
-                                    URLQueryItem(name: "longitude", value: String(coords.longitude)),
+                                    URLQueryItem(name: "latitude", value: String(location.latitude)),
+                                    URLQueryItem(name: "longitude", value: String(location.longitude)),
                                     URLQueryItem(name: "radius", value: "20000")]
         guard let url = urlComponents.url else { throw URLError(.badURL) }
         var request = URLRequest(url: url)
@@ -51,14 +80,23 @@ final class YelpSearchService: SearchServiceProtocol {
         return request
     }
     
-    private static func buildBusinessSearchRequest(term: String, coords: LatLong) throws -> URLRequest {
+    // MARK: - Fetch Businesses
+    // Requires full venue name (will not autocomplete)
+    func fetchBusinesses(term: String, location: Location) async throws -> [Business] {
+        let request = try Self.buildBusinessSearchRequest(term: term, location: location)
+        let (data, _) = try await URLSession.shared.data(for: request)
+        let response = try JSONDecoder().decode(YelpBusinessSearchResponse.self, from: data)
+        return response.businesses
+    }
+    
+    private static func buildBusinessSearchRequest(term: String, location: Location) throws -> URLRequest {
         guard var urlComponents = URLComponents(string: "https://api.yelp.com/v3/businesses/search") else {
             throw URLError(.badURL)
         }
         urlComponents.queryItems = [URLQueryItem(name: "location", value: term),
                                     URLQueryItem(name: "term", value: term),
-                                    URLQueryItem(name: "latitude", value: String(coords.latitude)),
-                                    URLQueryItem(name: "longitude", value: String(coords.longitude)),
+                                    URLQueryItem(name: "latitude", value: String(location.latitude)),
+                                    URLQueryItem(name: "longitude", value: String(location.longitude)),
                                     URLQueryItem(name: "radius", value: "20000"),
                                     URLQueryItem(name: "limit", value: "5")]
         guard let url = urlComponents.url else { throw URLError(.badURL) }
