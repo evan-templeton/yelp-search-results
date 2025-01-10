@@ -14,7 +14,7 @@ final class SearchServiceMock: SearchServiceProtocol {
     
     var fetchAutocompleteSuggestionsShouldThrow = false
     var suggestions = [String]()
-    func fetchAutocompleteSuggestions(input: String, coords: Location) async throws -> [String] {
+    func fetchAutocompleteSuggestions(input: String, coords: LatLong, city: String) async throws -> [String] {
         if fetchAutocompleteSuggestionsShouldThrow {
             throw SearchServiceError()
         }
@@ -23,7 +23,7 @@ final class SearchServiceMock: SearchServiceProtocol {
     
     var fetchBusinessesShouldThrow = false
     var businesses = [Business]()
-    func fetchBusinesses(term: String, coords: Location) async throws -> [Business] {
+    func fetchBusinesses(term: String, coords: LatLong, city: String) async throws -> [Business] {
         if fetchBusinessesShouldThrow {
             throw SearchServiceError()
         }

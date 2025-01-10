@@ -21,7 +21,7 @@ struct NearbyView: View {
         VStack {
             header
             InputView(text: $viewModel.searchInput,
-                      placeholder: "Search for a place in \(viewModel.city ?? "Irvine")",
+                      placeholder: "Search for a place in \(viewModel.city)",
                       image: Image(systemName: "magnifyingglass"),
                       imagePlacement: .leading)
             .autocorrectionDisabled()

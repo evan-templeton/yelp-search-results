@@ -3,6 +3,11 @@
     <entity name="AutocompleteCache" representedClassName="AutocompleteCache" syncable="YES">
         <attribute name="city" attributeType="String"/>
         <attribute name="input" attributeType="String"/>
-        <attribute name="results" attributeType="Transformable" valueTransformerName="NSSecureUnarchiveFromData" customClassName="[String]"/>
+        <attribute name="results" attributeType="Transformable" valueTransformerName="NSSecureUnarchiveFromData"/>
+    </entity>
+    <entity name="BusinessCache" representedClassName="BusinessCache" syncable="YES">
+        <attribute name="city" attributeType="String"/>
+        <attribute name="input" attributeType="String"/>
+        <attribute name="results" attributeType="Transformable" valueTransformerName=""/>
     </entity>
 </model>

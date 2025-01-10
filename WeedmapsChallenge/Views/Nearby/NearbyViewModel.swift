@@ -20,17 +20,17 @@ final class NearbyViewModel: NSObject, ObservableObject, CLLocationManagerDelega
     
     @Published var businesses = [Business]()
     @Published var suggestions = [String]()
-    @State private var location: Location
-    @Published var city: String?
+    @State private var coords: LatLong
+    @Published var city: String = "Irvine"
     
     @Published var errorMessage: String?
     
     init(searchService: SearchServiceProtocol) {
         self.searchService = searchService
         if let currentLocation = locationManager.location {
-            location = Location(clLocation: currentLocation.coordinate)
+            coords = LatLong(clLocation: currentLocation.coordinate)
         } else {
-            location = .irvine
+            coords = .irvine
         }
         super.init()
         locationManager.delegate = self
@@ -40,7 +40,7 @@ final class NearbyViewModel: NSObject, ObservableObject, CLLocationManagerDelega
     @MainActor
     func getAutocompleteSuggestions(input: String) async {
         do {
-            suggestions = try await searchService.fetchAutocompleteSuggestions(input: input, location: location)
+            suggestions = try await searchService.fetchAutocompleteSuggestions(input: input, coords: coords, city: city)
         } catch {
             errorMessage = error.localizedDescription
         }
@@ -49,7 +49,7 @@ final class NearbyViewModel: NSObject, ObservableObject, CLLocationManagerDelega
     @MainActor
     func getBusinesses(input: String) async {
         do {
-            businesses = try await searchService.fetchBusinesses(term: input, location: location)
+            businesses = try await searchService.fetchBusinesses(term: input, coords: coords, city: city)
         } catch {
             errorMessage = error.localizedDescription
         }
@@ -73,11 +73,11 @@ final class NearbyViewModel: NSObject, ObservableObject, CLLocationManagerDelega
     private func updateCurrentLocation(last: CLLocation? = nil) {
         let latest = last ?? locationManager.location
         if let latest {
-            location = Location(clLocation: latest.coordinate)
             Task {
-                let city = await getCityName(for: latest)
+                let cityName = await getCityName(for: latest)
                 await MainActor.run {
-                    self.city = city
+                    coords = LatLong(clLocation: latest.coordinate)
+                    city = cityName ?? city
                 }
             }
         }
@@ -86,8 +86,8 @@ final class NearbyViewModel: NSObject, ObservableObject, CLLocationManagerDelega
     private func getCityName(for location: CLLocation) async -> String? {
         return await withCheckedContinuation { continuation in
             CLGeocoder().reverseGeocodeLocation(location) { placemarks, error in
-                guard error == nil else {
-                    print("Error in reverse geocoding: \(error!.localizedDescription)")
+                if let error {
+                    self.errorMessage = "Error in reverse geocoding: \(error.localizedDescription)"
                     continuation.resume(returning: nil)
                     return
                 }
@@ -121,7 +121,6 @@ final class NearbyViewModel: NSObject, ObservableObject, CLLocationManagerDelega
     
     func locationManager(_ manager: CLLocationManager, didFailWithError error: any Error) {
         errorMessage = error.localizedDescription
-        print(error)
     }
     
     func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
@@ -131,12 +130,11 @@ final class NearbyViewModel: NSObject, ObservableObject, CLLocationManagerDelega
     }
 }
 
-private extension Location {
-    static let irvine = Location(city: "Irvine", latitude: 33.669445, longitude: -117.823059)
+private extension LatLong {
+    static let irvine = LatLong(latitude: 33.669445, longitude: -117.823059)
     
     init(clLocation: CLLocationCoordinate2D) {
-        city = ""
-        latitude = clLocation.latitude
-        longitude = clLocation.longitude
+        self.latitude = clLocation.latitude
+        self.longitude = clLocation.longitude
     }
 }

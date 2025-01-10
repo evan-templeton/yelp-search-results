@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		72FC364F2D2D80D400AFEE0B /* YelpCache.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 72FC364D2D2D80D400AFEE0B /* YelpCache.xcdatamodeld */; };
 		72FC36572D2D853700AFEE0B /* AutocompleteCache+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72FC36542D2D853700AFEE0B /* AutocompleteCache+CoreDataClass.swift */; };
+		72FC365B2D3076AD00AFEE0B /* BusinessCache+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72FC36582D3076AD00AFEE0B /* BusinessCache+CoreDataClass.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -34,6 +35,7 @@
 		5ABB149A2167C42700A2CB2C /* WeedmapsChallengeUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = WeedmapsChallengeUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		72FC364E2D2D80D400AFEE0B /* YelpCache.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = YelpCache.xcdatamodel; sourceTree = "<group>"; };
 		72FC36542D2D853700AFEE0B /* AutocompleteCache+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AutocompleteCache+CoreDataClass.swift"; sourceTree = "<group>"; };
+		72FC36582D3076AD00AFEE0B /* BusinessCache+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BusinessCache+CoreDataClass.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -94,6 +96,7 @@
 		5ABB14702167C42300A2CB2C = {
 			isa = PBXGroup;
 			children = (
+				72FC36582D3076AD00AFEE0B /* BusinessCache+CoreDataClass.swift */,
 				72FC36542D2D853700AFEE0B /* AutocompleteCache+CoreDataClass.swift */,
 				72FC364D2D2D80D400AFEE0B /* YelpCache.xcdatamodeld */,
 				72789B9A2CFFD9A4003DE3A3 /* WeedmapsChallenge */,
@@ -250,6 +253,7 @@
 			files = (
 				72FC36572D2D853700AFEE0B /* AutocompleteCache+CoreDataClass.swift in Sources */,
 				72FC364F2D2D80D400AFEE0B /* YelpCache.xcdatamodeld in Sources */,
+				72FC365B2D3076AD00AFEE0B /* BusinessCache+CoreDataClass.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
