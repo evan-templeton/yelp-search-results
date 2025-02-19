@@ -10,7 +10,9 @@ import Foundation
 import CoreData
 
 final class YelpSearchService: SearchServiceProtocol {
-    private static let apiKey = "Bearer SAL4YE9VCbmGRdByCMPrNoOX9sjUBQUMXcQ4UFTYEbqXhBn2f_CwAURsfCufYEfaNqPkMYtqLkWBV75EPkBjHfGY18yntKObuXCSTh9ItiA_YVRaOg7ID8lWc8pxX3Yx"
+    
+    /// Find your Yelp API Key here https://www.yelp.com/developers/v3/manage_app
+    private static let apiKey = "Bearer [YELP SEARCH API KEY]"
     
     private let persistentContainer: NSPersistentContainer
     
